@@ -11,6 +11,18 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'PagesController@getIndex')->name('home');
+Route::get('destinations', 'DestinationController@getDestinations')->name('destinations.index');
+Route::get('contact', 'PagesController@getContact')->name('home.contact');
+Route::get('about', 'PagesController@getAbout')->name('home.about');
+Route::resource('places', 'PlacesController');
+Route::resource('category','CategoryController', ['except' => ['create', 'edit']]);
+Route::resource('tags', 'TagController');
+Route::resource('reviews', 'ReviewController');
+
+Auth::routes();
+
+Route::get('home', 'HomeController@index');
+
+//api
+Route::get('api/all', 'ApiController@getAll');
