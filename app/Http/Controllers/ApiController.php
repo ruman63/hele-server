@@ -25,7 +25,7 @@ class ApiController extends Controller
 
         $photos = $place->photos;
         $filename = $photos[0]->name;
-        $file  = Image::make(public_path('images/'.$filename))->fit(240,180)->encode();
+        $file  = Image::make(public_path('images/'.$filename))->fit(640,360)->encode();
 
         $destination['thumb'] = base64_encode($file);
 
