@@ -15,4 +15,7 @@ class Place extends Model
     public function reviews(){
       return $this->hasMany('App\Review');
     }
+    public function photos() {
+      return $this->hasMany('App\Photo');
+    }
 }

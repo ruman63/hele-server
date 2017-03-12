@@ -51,6 +51,9 @@
             @endforeach
           </tbody>
         </table>
+        <div class="row text-center">
+          {{ $categories->links() }}
+        </div>
     </div>
     <div class="panel panel-default col-md-4">
       <div class="panel-heading">Add Category</div>

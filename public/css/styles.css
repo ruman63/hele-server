@@ -16,28 +16,28 @@
 	border-radius: 50%;
 }
 
-.comment-head-text{
+.review-head-text{
 	margin-left: 15px;
 	float: left;
 }
-.comment-head-text h4{
+.review-head-text h4{
 	margin: 4px 0px;
 }
-.comment-author-img{
+.review-author-img{
 	float: left;
 	width: 50px;
 	height: 50px;
 	border-radius: 50%;
 }
-.comment-head p{
+.review-head p{
 	color: #777;
 	font-size: 11px;
 }
-.comment-body{
+.review-body{
 	clear:both;
 	margin-left: 75px;
 }
-.comment{
+.review{
 	margin-bottom: 20px;
 	background: #f5f5f5;
 	border: 1px solid #e3e3e3;
@@ -45,9 +45,29 @@
 	border-radius: 4px;
 
 }
-.title-comments{
+.title-reviews{
 	margin-bottom: 35px;
 }
-.title-comments span{
+.title-reviews span{
 	margin-right: 15px;
+}
+.rating{
+  color: #ff9900
+}
+
+.image-showcase{
+  margin: 10px;
+}
+.panel-heading > .h1, .h2, .h3, .h4, .h5, .h6 {
+  margin: 0px;
+}
+
+.tags{
+  margin-bottom: 20px;
+}
+.head{
+  margin-bottom: 40px;
+}
+.clearit{
+  clear: both;
 }

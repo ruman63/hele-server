@@ -7,7 +7,9 @@ use App\Place;
 use App\Tag;
 use App\Category;
 use Session;
-
+use App\Photo;
+use Image;
+use Storage;
 class PlacesController extends Controller
 {
     /**
@@ -42,22 +44,43 @@ class PlacesController extends Controller
     public function store(Request $request)
     {
         $place = new Place;
-
-        $this->validate($request, [
+        $rules = [
           'name' => 'required|min:3|max:255',
           'location' => 'required|min:5|max:255',
           'nearest_to' => 'max:255',
           'description' => 'required|min:20|max:6000',
           'category_id' => 'required'
-        ]);
+        ];
+        foreach ($request->file('images') as $index => $image) {
+          $rules['images.'.$index] = 'required|image';
+        }
+        $this->validate($request, $rules);
+        $photos=[];
+        if($request->hasFile('images')) {
+          $images = $request->file('images');
+          $i=0;
+          foreach($images as $imageFile){
+            $photo = new Photo;
+            $filename = $request->name . '_' . time() ."_$i." . $imageFile->getClientOriginalExtension();
+            $location = public_path('images/' . $filename);
+
+            Image::make($imageFile)->fit(800,600, function($const){ $const->upsize();})->save($location);
+
+            $photo->name = $filename;
+
+            $photos[$i++] = $photo;
+          }
+        }
 
         $place->name = $request->name;
         $place->location = $request->location;
         $place->nearest_to = $request->nearest_to;
         $place->description = $request->description;
         $place->category_id = $request->category_id;
-
         $place->save();
+
+
+        $place->photos()->saveMany($photos);
 
         if(isset($request->tags)){
           $place->tags()->sync($request->tags);
@@ -148,6 +171,9 @@ class PlacesController extends Controller
     {
         $place = Place::find($id);
         $place->tags()->detach();
+        foreach ($place->photos as $photo) {
+          Storage::delete($photo->name);
+        }
         $place->delete();
 
         Session::flash('success', 'Place deleted successfully');

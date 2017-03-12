@@ -48,6 +48,10 @@
             @endforeach
           </tbody>
         </table>
+        <br>
+        <div class="row text-center">
+          {{ $tags->links() }}
+        </div>
     </div>
     <div class="panel panel-default col-md-4">
       <div class="panel-heading">Add Tag</div>

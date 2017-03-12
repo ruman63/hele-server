@@ -10,8 +10,7 @@
     <div class="row">
       <div class="col-md-8 col-md-offset-2">
         <h1>Add New Place</h1>
-        <form class="form" action="{{ route('places.store') }}" method="POST">
-          {{  csrf_field() }}
+        {!! Form::open(['route' => ['places.store'], 'method' => 'POST', 'files'=>true]) !!}
           <label for="name" class="form-spacing-top">Name:</label>
           <input type="text" name="name" value="" class="form-control">
 
@@ -35,6 +34,9 @@
             @endforeach
           </select>
 
+          {{ Form::label('images', 'Upload Images: ', ['class' => 'form-spacing-top']) }}
+          {{ Form::file('images[]', ['class' => 'form-control', 'multiple' => true]) }}
+          
           <label for="description" class="form-spacing-top">Description:</label>
           <textarea type="text" name="description" value="" class="form-control" rows="8"></textarea>
 

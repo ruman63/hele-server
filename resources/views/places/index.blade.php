@@ -35,6 +35,10 @@
         @endforeach
         </tbody>
       </table>
+
+      <div class="row text-center">
+        {{ $places->links() }}
+      </div>
     </div>
   </div>
 @endsection
