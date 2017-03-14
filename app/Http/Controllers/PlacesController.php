@@ -12,6 +12,10 @@ use Image;
 use Storage;
 class PlacesController extends Controller
 {
+    public function __construct(){
+      $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -51,8 +55,10 @@ class PlacesController extends Controller
           'description' => 'required|min:20|max:6000',
           'category_id' => 'required'
         ];
-        foreach ($request->file('images') as $index => $image) {
-          $rules['images.'.$index] = 'required|image';
+        if($request->hasFile('images')){
+          foreach ($request->file('images') as $index => $image) {
+            $rules['images.'.$index] = 'required|image';
+          }
         }
         $this->validate($request, $rules);
         $photos=[];

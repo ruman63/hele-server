@@ -16,3 +16,9 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::get('/all', 'ApiController@listAll');
+Route::get('/refine', 'ApiController@showRefine');
+Route::post('/refine', 'ApiController@refine');
+Route::get('/details/{id}', 'ApiController@details')->where('id', '[0-9]+');

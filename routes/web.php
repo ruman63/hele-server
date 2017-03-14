@@ -35,7 +35,3 @@ Route::get('photos/{id}', 'PhotoController@show')->name('photos.show');
 Auth::routes();
 
 Route::get('home', 'HomeController@index');
-
-//api
-Route::get('api/all', 'ApiController@getAll');
-Route::get('api/photos/{place_id}', 'ApiController@getPhotos');

@@ -8,6 +8,9 @@ use Redirect;
 
 class ReviewController extends Controller
 {
+    public function __construct(){
+      $this->middleware('auth', ['except' => 'store']);
+    }
     /**
      * Store a newly created resource in storage.
      *

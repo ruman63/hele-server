@@ -12,6 +12,10 @@ use Storage;
 
 class PhotoController extends Controller
 {
+    public function __construct(){
+      $this->middleware('auth');
+    }
+
     public function index(){
       $photos = Photo::orderBy('place_id')->paginate(24);
       return view('photos.index')->withPhotos($photos);
@@ -58,7 +62,7 @@ class PhotoController extends Controller
 
   public function show($id){
     $photo = Photo::find($id);
-    return Redirect::to(asset('images/'.$photo->name));
+    return Redirect::to(public_path('images/' . $photo->name));
   }
 
   public function destroy($id){
