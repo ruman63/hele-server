@@ -62,7 +62,7 @@ class PhotoController extends Controller
 
   public function show($id){
     $photo = Photo::find($id);
-    return Redirect::to(public_path('images/' . $photo->name));
+    return Redirect::to(asset('images/' . $photo->name));
   }
 
   public function destroy($id){
