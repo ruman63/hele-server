@@ -18,7 +18,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-Route::get('/all', 'ApiController@listAll');
-Route::get('/refine', 'ApiController@showRefine');
-Route::post('/refine', 'ApiController@refine');
+Route::any('/places', 'ApiController@allPlaces');
+Route::get('/places/refine', 'ApiController@showRefine');
+Route::post('/places/refine', 'ApiController@refinePlaces');
+Route::get('/categories', 'ApiController@allCategories');
+
 Route::get('/details/{id}', 'ApiController@details')->where('id', '[0-9]+');

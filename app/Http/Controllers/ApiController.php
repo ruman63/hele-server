@@ -17,27 +17,9 @@ class ApiController extends Controller
   /**
    *@return \Illuminate\Http\Response
    */
-    public function listAll(){
-      $places = Place::select(['id', 'name', 'category_id'])->get();
-      $destinationList = [];
-      $i=0;
-      foreach($places as $place){
-        $destination = [];
-        $destination['id'] = $place->id;
-        $destination['name'] = $place->name;
-        $destination['location'] = $place->location;
-
-        $photos = $place->photos;
-        $filename = $photos[0]->name;
-        $file  = Image::make(public_path('images/'.$filename))->fit(640,360)->encode();
-
-        $destination['thumb'] = base64_encode($file);
-
-        $destination['category'] = $place->category->name;
-
-        $destinationList[$i++] = $destination;
-
-      }
+    public function allPlaces(){
+      $places = Place::select(['id', 'name', 'category_id'])->orderBy('name')->get();
+      $destinationList = $this->makeList($places);
       return response()->json($destinationList,200);
     }
 
@@ -54,7 +36,7 @@ class ApiController extends Controller
       return view('api.refine')->withCategories($cats)->withErrors([]);
     }
     public function refine(Request $request){
-      $places = Place::getQuery();
+      $places = Place::select();
 
       $search = $request->searchString;
 
@@ -72,7 +54,9 @@ class ApiController extends Controller
         }
         array_unique($related);
         if(count($related) > 0)
-        $places = $places->whereIn('id', $related);
+        $places = $places->orWhere( function ($query) use ($related){
+          $query->whereIn('id', $related);
+        });
       }
 
       $sortColumn=$request->input('sortColumn');
@@ -89,10 +73,56 @@ class ApiController extends Controller
         $places = $places->orderBy($sortColumn);
       }
 
-
       $places = $places->get();
+      return response()->json($this->makeList($places));
 
-      return response()->json($places);
+    }
 
+    public function allCategories(){
+      $categories = Category::select('id', 'name')->get();
+
+      return response()->json($this->makeCategoriesList($categories), 200);
+    }
+
+    private function makeList($places){
+      $destinationList = [];
+      $i=0;
+      foreach($places as $place){
+        $destination = [];
+        $destination['id'] = $place->id;
+        $destination['name'] = $place->name;
+        $destination['location'] = $place->location;
+
+        $allphotos = $place->photos;
+        if(count($allphotos) > 0){
+          $filename = $allphotos[0]->name;
+        }
+        else {
+          $filename = 'noimage.jpg';
+        }
+
+        $file  = Image::make(public_path('images/'.$filename))->fit(640,360)->encode();
+        $destination['thumb'] = base64_encode($file);
+
+        $destination['category'] = $place->category->name;
+
+        $destinationList[$i++] = $destination;
+
+      }
+      return $destinationList;
+    }
+
+    private function makeCategoriesList($categories){
+      $categoryList = [];
+      $i = 0;
+      foreach ($categories as $category) {
+        $cat = [];
+        $cat['id'] = $category->id;
+        $cat['name'] = $category->name;
+
+        $categoryList[$i++] = $cat;
+      }
+
+      return $categoryList;
     }
 }
