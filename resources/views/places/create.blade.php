@@ -3,7 +3,7 @@
 @section('title', '| Add New Place')
 
 @section('styles')
-  <link rel="stylesheet" href="{{ asset('public/css/select2.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
 @endsection
 
 @section('content')
@@ -47,7 +47,7 @@
 @endsection
 
 @section('scripts')
-  <script src="{{ asset('public/js/select2.min.js') }}"></script>
+  <script src="{{ asset('js/select2.min.js') }}"></script>
   <script type="text/javascript">
       $('.multiple-select').select2();
   </script>

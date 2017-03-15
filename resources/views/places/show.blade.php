@@ -21,7 +21,7 @@
               <div class="panel-body">
                 <div class="row">
                   @foreach ($place->photos as $photo)
-                      <a href="{{ route('photos.show', $photo->id) }}"><img class="image-showcase" src="{{ asset('public/images/' . $photo->name) }}" width="150px"></a>
+                      <a href="{{ route('photos.show', $photo->id) }}"><img class="image-showcase" src="{{ asset('images/' . $photo->name) }}" width="150px"></a>
                   @endforeach
                   <a href="{{ route('photos.showplace', $place->id) }}">See all >></a>
                 </div>
