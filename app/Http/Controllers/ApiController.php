@@ -18,7 +18,7 @@ class ApiController extends Controller
    *@return \Illuminate\Http\Response
    */
     public function allPlaces(){
-      $places = Place::select(['id', 'name', 'category_id'])->orderBy('name')->paginate(1);
+      $places = Place::select(['id', 'name', 'category_id'])->orderBy('name')->get();
       $destinationList = $this->makeList($places);
       return response()->json($destinationList,200);
     }
@@ -95,15 +95,13 @@ class ApiController extends Controller
 
         $allphotos = $place->photos;
         if(count($allphotos) > 0){
-          $filepath = config('s3images.folder.mobileapi').$allphotos[0]->name;
+          $filepath = config('s3images.url.mobileapi').$allphotos[0]->name;
         }
         else {
-          $filepath = 'utils/noimage.jpg';
+          $filepath = config('s3images.url.noimage');
         }
 
-        $file = Storage::disk('s3')->get($filepath);
-
-        $destination['thumb'] = base64_encode($file);
+        $destination['thumb'] = $filepath;
 
         $destination['category'] = $place->category->name;
 
