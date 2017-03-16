@@ -95,7 +95,7 @@ class ApiController extends Controller
 
         $allphotos = $place->photos;
         if(count($allphotos) > 0){
-          $filepath = config('s3images.folder.mobileapi').$allphotos[0]->name;
+          $filepath = config('s3images.folder.thumb').$allphotos[0]->name;
         }
         else {
           $filepath = "utils/noimage.jpg";
