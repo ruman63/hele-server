@@ -29,6 +29,7 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">cPanel <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="{{ route('places.index') }}">Places</a></li>
+            <li><a href="{{ route('photos.index') }}">Photos</a></li>
             <li><a href="{{ route('category.index') }}">Categories</a></li>
             <li><a href="{{ route('tags.index') }}">Tags</a></li>
           </ul>
