@@ -15,7 +15,7 @@
                 @if( $place->photos()->count() >0  &&  Storage::disk('s3')->exists( config('s3images.folder.thumb') . $place->photos[0]->name ) )
                   <img class="img-responsive" src="{{ config('s3images.url.thumb') . $place->photos[0]->name }}" >
                 @else
-                  <img class="img-responsive" src="{{ config('s3images.url.noimage') }}" >
+                  <img class="img-responsive" src="{{ config('s3images.url.noimage-thumb') }}" >
                 @endif
               </div>
               <div class="col-xs-12 col-md-9">
