@@ -95,13 +95,13 @@ class ApiController extends Controller
 
         $allphotos = $place->photos;
         if(count($allphotos) > 0){
-          $filename = $allphotos[0]->name;
+          $filepath = config('s3images.folder.mobileapi').$allphotos[0]->name;
         }
         else {
-          $filename = 'noimage.jpg';
+          $filepath = "utils/noimage.jpg";
         }
 
-        $file  = Image::make(public_path('images/'.$filename))->fit(640,360)->encode();
+        $file  = Storage::disk('s3')->get($filepath);
         $destination['thumb'] = base64_encode($file);
 
         $destination['category'] = $place->category->name;
