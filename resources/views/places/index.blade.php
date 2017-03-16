@@ -11,9 +11,10 @@
           <th>#</th>
           <th>Name</th>
           <th>Location</th>
+          <th>City</th>
           <th>Category</th>
           <th>Description</th>
-          <th></th>
+          <th width="70px"></th>
         </thead>
         <tbody>
         @foreach ($places as $place)
@@ -21,14 +22,15 @@
             <td>{{ $place->id }}</td>
             <td>{{ $place->name }}</td>
             <td>{{ $place->location }}</td>
+            <td>{{ $place->city }}</td>
             <td>{{ $place->category->name }}</td>
-            <td>{{ substr($place->description, 0, 100) }}{{ strlen($place->description) > 100 ? "..." : "" }}</td>
+            <td>{{ substr($place->description, 0, 80) }}{{ strlen($place->description) > 80 ? "..." : "" }}</td>
             <td>
-              <form class="pull-right" action="{{ route('places.destroy', $place->id) }}" method="post">
+              <a href="{{ route('places.show', $place->id) }}" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-list"></span></a>
+              <a href="javascript: submitDelete({{ $place->id }})" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></a>
+              <form id="delete-{{$place->id}}" class="pull-right" action="{{ route('places.destroy', $place->id) }}" method="post">
                 <input type="hidden" name="_method" value="DELETE">
                 {{ csrf_field() }}
-                <a href="{{ route('places.show', $place->id) }}" class="btn btn-default btn-sm">View</a>
-                <input type="submit" value="Delete" class="btn btn-danger btn-sm">
               </form>
             </td>
           </tr>
@@ -41,4 +43,10 @@
       </div>
     </div>
   </div>
+@endsection
+
+@section('scripts')
+  <script type="text/javascript">
+      function submitDelete(id) {   $("#delete-"+id).submit(); }
+   </script>
 @endsection

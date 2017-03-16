@@ -5,7 +5,7 @@
   <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-md-offset-1 col-lg-offset-2">
     <div class="row head">
       <div class="col-xs-12">
-        <h1>{{ $place->name }}</h1>
+        <h1>{{ $place->name }} <small>{{ $place->city }}</small></h1>
         <h3><strong>Location: </strong>{{ $place->location }}</h3>
         <h3><strong>Category: </strong>{{ $place->category->name }}</h3>
         <h3><strong>Nearest Station: </strong>{{ $place->nearest_to }}</h4>
@@ -18,16 +18,18 @@
               <div class="panel-heading h2">Photos</div>
               <div class="panel-body">
                 <div class="row">
-                  @if($place->photos()->count() > 6)
-                    @for ($i=0; $i < $place->photos()->count(); $i++)
-                        <a href="{{ route('photos.show', $place->photos[$i]->id) }}" ><img class="image-showcase" src="{{ asset( 'images/' . $place->photos[$i]->name ) }}" width="150px"></a>
+                    @for ($i=0; $i < 6 && $i < $place->photos()->count(); $i++)
+                      <a href="{{ route('photos.show', $place->photos[$i]->id) }}">
+                      @if( Storage::disk('s3')->exists( config('s3images.folder.thumb') . $place->photos[$i]->name ) )
+                        <img class="image-showcase" src="{{ config('s3images.url.thumb') . $place->photos[$i]->name }}" width="150px" >
+                      @else
+                        <img class="image-showcase" src="{{ config('s3images.url.noimage') }}" width = "150px" >
+                      @endif
+                      </a>
                     @endfor
-                    <a href="{{ route('photos.showplace', $place->id) }}"></a>
-                  @else
-                    @foreach ($place->photos as $photo)
-                        <a href="{{ route('photos.show', $photo->id) }}" ><img class="image-showcase" src="{{ asset( 'images/' . $photo->name ) }}" width="150px"></a>
-                    @endforeach
-                  @endif
+                    @if($place->photos()->count() > 6)
+                      <a href="{{ route('photos.showplace', $place->id) }}">See All >></a>
+                    @endif
                 </div>
               </div>
             </div>

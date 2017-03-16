@@ -17,6 +17,9 @@
           <label for="location" class="form-spacing-top">Location:</label>
           <input type="text" name="location" value="{{ $place->location }}" class="form-control">
 
+          <label for="city" class="form-spacing-top">City:</label>
+          <input type="text" name="city" value="{{ $place->city }}" class="form-control" disabled="">
+
           <label for="nearest_to" class="form-spacing-top">Nearest Station:</label>
           <input type="text" name="nearest_to" value="{{ $place->nearest_to }}" class="form-control">
 

@@ -27,31 +27,61 @@ class PhotoController extends Controller
 
     public function store(Request $request, $place_id) {
       $place = Place::find($place_id);
+      $cloudDisk = Storage::disk('s3');
+
       $rules = ['images' => 'required'];
-      foreach ($request->file('images') as $index => $image) {
-        $rules['images.'.$index] = 'required|image';
-      }
+      if(count($request->images) > 0)
+        foreach ($request->file('images') as $index => $image) {
+          $rules['images.'.$index] = 'required|image';
+        }
+
       $this->validate($request, $rules);
 
       $images = $request->file('images');
       $photos=[];
       $i=0;
+
+      //Saving Images
       foreach($images as $imageFile){
         $photo = new Photo;
-        $filename = $place->name. '_' . time() ."_$i."  . $imageFile->getClientOriginalExtension();
-        $location = public_path('images/' . $filename);
+        $place->photos()->save($photo);
 
-        Image::make($imageFile)->fit(800,600, function($constraint){
+        //File name & relative path
+        $filename = "$photo->id." . $imageFile->getClientOriginalExtension();
+        $path = "$place->name/" . $filename;
+
+        //Upload
+
+        //Original Version
+        $size = config('s3images.size.original');
+        $folder = config('s3images.folder.original') . $path;
+        $file = Image::make($imageFile)->fit($size['width'], $size['height'], function($constraint){
           $constraint->upsize();
-        })->save($location);
+        })->encode();
+        $cloudDisk->put($folder, $file->__toString(), 'public');
 
-        $photo->name = $filename;
-        $photos[$i++] = $photo;
+        //Thumbnail Version
+        $size = config('s3images.size.thumb');
+        $folder = config('s3images.folder.thumb') . $path;
+        $file = Image::make($imageFile)->fit($size['width'], $size['height'], function($constraint){
+          $constraint->upsize();
+        })->encode();
+        $cloudDisk->put($folder, $file->__toString(), 'public');
+
+        //Mobile Version
+        $size = config('s3images.size.mobileapi');
+        $folder = config('s3images.folder.mobileapi') . $path;
+        $file = Image::make($imageFile)->fit($size['width'], $size['height'], function($constraint){
+          $constraint->upsize();
+        })->encode();
+        $cloudDisk->put($folder, $file->__toString(), 'public');
+
+        $photo->name = $path;
+        $place->photos()->save($photo);
+
       }
-      $place->photos()->saveMany($photos);
-
+      //Images Uploaded
       Session::flash('success', 'Images added successfully');
-
       return Redirect::route('places.show', $place_id);
   }
 
@@ -62,12 +92,35 @@ class PhotoController extends Controller
 
   public function show($id){
     $photo = Photo::find($id);
-    return Redirect::to(asset('images/' . $photo->name));
+    $filename = config('s3images.folder.original') . $photo->name;
+    if(Storage::disk('s3')->exists($filename)){
+      $url = config('s3images.url.original').$photo->name;
+    } else {
+      $url = config('s3images.url.noimage');
+    }
+    return Redirect::away($url);
   }
 
   public function destroy($id){
     $photo = Photo::find($id);
-    Storage::delete($photo->name);
+    $disk = Storage::disk('s3');
+
+    //delete original image if exist
+    $filename = config('s3images.folder.original') . $photo->name;
+    if($disk->exists($filename))
+      $disk->delete($filename);
+
+    //delete thumb if exist
+    $filename = config('s3images.folder.thumb') . $photo->name;
+    if($disk->exists($filename))
+      $disk->delete($filename);
+
+    //delete api image if exist
+    $filename = config('s3images.folder.mobileapi') . $photo->name;
+    if($disk->exists($filename))
+      $disk->delete($filename);
+
+
     $photo->delete();
 
     return Redirect::route('photos.index');

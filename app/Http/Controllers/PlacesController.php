@@ -51,6 +51,7 @@ class PlacesController extends Controller
         $rules = [
           'name' => 'required|min:3|max:255',
           'location' => 'required|min:5|max:255',
+          'city' => 'required|max:255',
           'nearest_to' => 'max:255',
           'description' => 'required|min:20|max:6000',
           'category_id' => 'required'
@@ -143,6 +144,7 @@ class PlacesController extends Controller
       $this->validate($request, [
         'name' => 'required|min:3|max:255',
         'location' => 'required|min:5|max:255',
+        'city' => 'required|max:255',
         'nearest_to' => 'max:255',
         'description' => 'required|min:20|max:6000',
         'category_id' => 'required'
@@ -176,9 +178,11 @@ class PlacesController extends Controller
     public function destroy($id)
     {
         $place = Place::find($id);
+        $disk  = Storage::disk('s3');
+        $folders = config('s3images.folder');
         $place->tags()->detach();
-        foreach ($place->photos as $photo) {
-          Storage::delete($photo->name);
+        foreach ($folders as $key => $folder) {
+            $disk->deleteDirectory($folder."/$place->name");
         }
         $place->delete();
 

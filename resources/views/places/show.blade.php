@@ -4,6 +4,8 @@
   <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-8">
       <h1>{{ $place->name }}</h1>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-8">
       <div class="row">
           <div class="col-xs-12">
             <div class="panel panel-default">
@@ -21,7 +23,7 @@
               <div class="panel-body">
                 <div class="row">
                   @foreach ($place->photos as $photo)
-                      <a href="{{ route('photos.show', $photo->id) }}"><img class="image-showcase" src="{{ asset('images/' . $photo->name) }}" width="150px"></a>
+                      <a href="{{ route('photos.show', $photo->id) }}" ><img class="image-showcase" src="{{ config('s3images.url.thumb') . $photo->name }}" width = "150px" alt="{{ $photo->name }}"></a>
                   @endforeach
                   <a href="{{ route('photos.showplace', $place->id) }}">See all >></a>
                 </div>
@@ -30,7 +32,7 @@
             </div>
           </div>
       </div>
-      <p class="lead">
+      <p>
         {{ $place->description }}
       </p>
       <hr>
@@ -43,6 +45,10 @@
     <div class="col-xs-12 col-sm-12 col-md-4">
       <div class="well">
         <h3 class="text-center">Place Info</h3>
+        <label>City:</label>
+        <p>
+          {{ $place->city }}
+        </p>
         <label>Location:</label>
         <p>
           {{ $place->location }}
