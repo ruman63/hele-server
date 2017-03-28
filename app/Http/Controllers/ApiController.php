@@ -85,7 +85,7 @@ class ApiController extends Controller
     }
 
     private function makeList($places){
-      $destinationList = [[
+      $destinationList = ['meta' => [
         'current' => $places->currentPage() ,
         'last' => $places->lastPage()
         ]
