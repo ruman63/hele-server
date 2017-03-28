@@ -74,7 +74,7 @@ class ApiController extends Controller
         $places = $places->orderBy($sortColumn);
       }
 
-      $places = $places->get();
+      $places = $places->paginate(5);
       return response()->json($this->makeList($places));
 
     }
