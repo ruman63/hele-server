@@ -87,8 +87,7 @@ class ApiController extends Controller
     private function makeList($places){
       $destinationList = [[
         'current' => $places->currentPage() ,
-        'last' => $places->lastPage(),
-        'first' => $places->firstPage()
+        'last' => $places->lastPage()
         ]
       ];
       $i=0;
