@@ -75,7 +75,6 @@ class ApiController extends Controller
       }
 
       $places = $places->paginate(5);
-    //  dd($places);
       return response()->json($this->makeList($places));
 
     }
@@ -86,10 +85,10 @@ class ApiController extends Controller
     }
 
     private function makeList($places){
-      $destinationList = ['paginator' => [
-        'next_url' => $places->nextPageUrl(),
+      $destinationList = [[
         'current' => $places->currentPage() ,
-        'total' => $places->total()
+        'last' => $places->lastPage(),
+        'first' => $places->firstPage()
         ]
       ];
       $i=0;
