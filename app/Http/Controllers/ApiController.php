@@ -88,7 +88,8 @@ class ApiController extends Controller
       $destinationList = ['meta' => [
         'current' => $places->currentPage() ,
         'last' => $places->lastPage()
-        ]
+      ],
+        'data' => []
       ];
       $i=0;
       foreach($places as $place){
@@ -109,7 +110,7 @@ class ApiController extends Controller
 
         $destination['category'] = $place->category->name;
 
-        $destinationList[$i++] = $destination;
+        $destinationList['data'][$i++] = $destination;
 
       }
       return $destinationList;
