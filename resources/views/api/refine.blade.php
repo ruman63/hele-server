@@ -2,7 +2,7 @@
 @section('title', 'Testing Api')
 @section('content')
 
-{!! Form::open(['url' => url('api/refine'), 'method' => 'POST']) !!}
+{!! Form::open(['url' => url('api/places/refine'), 'method' => 'POST']) !!}
 {{ Form::select('category', $categories, null,['class' => 'form-control']) }}
 
 {{ Form::label('searchString', 'Search: ') }}

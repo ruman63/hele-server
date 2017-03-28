@@ -24,7 +24,8 @@ class ApiController extends Controller
     }
 
     public function details($id){
-
+      $place  = Place::find($id);
+      return response()->json($place);
     }
 
     public function showRefine(){
@@ -35,7 +36,7 @@ class ApiController extends Controller
       }
       return view('api.refine')->withCategories($cats)->withErrors([]);
     }
-    public function refine(Request $request){
+    public function refinePlaces(Request $request){
       $places = Place::select();
 
       $search = $request->searchString;
@@ -80,7 +81,6 @@ class ApiController extends Controller
 
     public function allCategories(){
       $categories = Category::select('id', 'name')->get();
-
       return response()->json($this->makeCategoriesList($categories), 200);
     }
 
