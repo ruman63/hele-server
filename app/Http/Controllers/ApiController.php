@@ -25,7 +25,7 @@ class ApiController extends Controller
 
     public function details($id){
       $place  = Place::find($id);
-      return response()->json($place);
+      return response()->json($this->getDetailedInfo($place));
     }
 
     public function showRefine(){
@@ -36,6 +36,9 @@ class ApiController extends Controller
       }
       return view('api.refine')->withCategories($cats)->withErrors([]);
     }
+
+
+
     public function refinePlaces(Request $request){
       $places = Place::select();
 
@@ -128,5 +131,36 @@ class ApiController extends Controller
       }
 
       return $categoryList;
+    }
+
+    private function getDetailedInfo($place){
+      $detail = [];
+      $category  = $place->category->name;
+      $tags = [];
+        foreach ($place->tags()->allRelatedIds() as $tagId) {
+          $tagName = Tag::find($tagId)->name;
+          array_push($tags, $tagName);
+      }
+      $reviews = $place->reviews;
+      $ratingAvg = round($place->reviews()->avg('rating'), 1);
+      $ratingCount = $place->reviews()->count();
+      $photos = [];
+      foreach($place->photos as $photo){
+        array_push($photos, config('s3images.url.mobileapi').urlencode($photo->name));
+      }
+
+      $detail['id'] = $place->id;
+      $detail['name'] = $place->name;
+      $detail['category'] = $category;
+      $detail['location'] = $place->location;
+      $detail['city'] = $place->city;
+      $detail['description'] = $place->description;
+      $detail['tags'] = $tags;
+      $detail['reviews'] = $reviews;
+      $detail['ratingAvg'] = $ratingAvg;
+      $detail['ratingCount'] = $ratingCount;
+      $detail['photos'] = $photos;
+
+      return $detail;
     }
 }
